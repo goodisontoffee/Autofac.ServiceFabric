@@ -26,6 +26,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Fabric;
+using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Runtime;
 
@@ -35,14 +36,14 @@ namespace Autofac.Integration.ServiceFabric
     [SuppressMessage("Microsoft.Performance", "CA1812", Justification = "Instantiated at runtime via dependency injection")]
     internal sealed class ActorFactoryRegistration : IActorFactoryRegistration
     {
-        public void RegisterActorFactory<TActor>(
+        public async Task RegisterActorFactory<TActor>(
             ILifetimeScope container,
             Func<ActorBase, IActorStateProvider, IActorStateManager> stateManagerFactory = null,
             IActorStateProvider stateProvider = null,
             ActorServiceSettings settings = null)
             where TActor : ActorBase
         {
-            ActorRuntime.RegisterActorAsync<TActor>((context, actorTypeInfo) =>
+            await ActorRuntime.RegisterActorAsync<TActor>((context, actorTypeInfo) =>
             {
                 return new ActorService(
                     context,
@@ -65,7 +66,7 @@ namespace Autofac.Integration.ServiceFabric
                     stateManagerFactory,
                     stateProvider,
                     settings);
-            }).GetAwaiter().GetResult();
+            }).ConfigureAwait(false);
         }
     }
 }

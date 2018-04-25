@@ -25,6 +25,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Fabric;
+using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
 
 namespace Autofac.Integration.ServiceFabric
@@ -33,10 +34,10 @@ namespace Autofac.Integration.ServiceFabric
     [SuppressMessage("Microsoft.Performance", "CA1812", Justification = "Instantiated at runtime via dependency injection")]
     internal sealed class StatefulServiceFactoryRegistration : IStatefulServiceFactoryRegistration
     {
-        public void RegisterStatefulServiceFactory<TService>(ILifetimeScope container, string serviceTypeName)
+        public async Task RegisterStatefulServiceFactory<TService>(ILifetimeScope container, string serviceTypeName)
             where TService : StatefulServiceBase
         {
-            ServiceRuntime.RegisterServiceAsync(serviceTypeName, context =>
+            await ServiceRuntime.RegisterServiceAsync(serviceTypeName, context =>
             {
                 var lifetimeScope = container.BeginLifetimeScope(builder =>
                 {
@@ -46,7 +47,7 @@ namespace Autofac.Integration.ServiceFabric
                 });
                 var service = lifetimeScope.Resolve<TService>();
                 return service;
-            }).GetAwaiter().GetResult();
+            }).ConfigureAwait(false);
         }
     }
 }

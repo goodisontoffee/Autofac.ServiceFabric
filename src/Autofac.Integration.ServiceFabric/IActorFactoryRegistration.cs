@@ -24,13 +24,14 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Runtime;
 
 namespace Autofac.Integration.ServiceFabric
 {
     internal interface IActorFactoryRegistration
     {
-        void RegisterActorFactory<TActor>(
+        Task RegisterActorFactory<TActor>(
             ILifetimeScope lifetimeScope,
             Func<ActorBase, IActorStateProvider, IActorStateManager> stateManagerFactory = null,
             IActorStateProvider stateProvider = null,

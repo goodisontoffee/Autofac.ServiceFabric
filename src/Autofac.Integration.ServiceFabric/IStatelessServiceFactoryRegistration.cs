@@ -23,13 +23,14 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
 
 namespace Autofac.Integration.ServiceFabric
 {
     internal interface IStatelessServiceFactoryRegistration
     {
-        void RegisterStatelessServiceFactory<TService>(ILifetimeScope lifetimeScope, string serviceTypeName)
+        Task RegisterStatelessServiceFactory<TService>(ILifetimeScope lifetimeScope, string serviceTypeName)
             where TService : StatelessService;
     }
 }
